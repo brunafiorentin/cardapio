@@ -150,7 +150,7 @@ class HomeScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(
-              "Bem-vindo(a) ao Restaurante!",
+              "Bem-vindo(a) ao Restaurante Apelação!",
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
@@ -188,7 +188,7 @@ class HomeScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
-              "Aqui no nosso restaurante, você enontra os melhores sabores e a melhor qualidade",
+              "Aqui no nosso restaurante, você encontra os melhores sabores e a melhor qualidade, além de se divertir com o desespero dos universitários! :)",
             ),
           ),
         ],
