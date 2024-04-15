@@ -64,7 +64,7 @@ class MenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cardápio'),
+        title: Text('Cardápio de pratos quentes'),
       ),
       body: ListView(
         padding: EdgeInsets.all(16.0),
@@ -88,6 +88,157 @@ class MenuScreen extends StatelessWidget {
             image: 'images/macarronada.jpg',
           ),
         ],
+      ),
+    );
+  }
+}
+
+class DrinkScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Cardápio de bebidas'),
+      ),
+      body: ListView(
+        padding: EdgeInsets.all(16.0),
+        children: <Widget>[
+          MenuItem(
+            title: 'Caipirinha',
+            description: 'A melhor caipirinha já provada em todo esse Brasil',
+            price: 'R\$ 15,00',
+            image: 'images/caipirinha.jpg',
+          ),
+          MenuItem(
+            title: 'Cerveja',
+            description: 'As melhores cervejas você encontra aqui',
+            price: 'R\$ 7,00',
+            image: 'images/cerveja.jpg',
+          ),
+          MenuItem(
+            title: 'Vinho',
+            description: 'Massa fresca feita na hora',
+            price: 'R\$ 20,00',
+            image: 'images/Vinhotinto.jpg',
+          ),
+          MenuItem(
+            title: 'Coca Cola',
+            description: 'Massa fresca feita na hora',
+            price: 'R\$ 8,00',
+            image: 'images/cocacola.jpeg',
+          ),
+          MenuItem(
+            title: 'Água',
+            description: 'Massa fresca feita na hora',
+            price: 'R\$ 5,00',
+            image: 'images/agua.png',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              "Bem-vindo(a) ao Restaurante!",
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Text(
+              "Especialidades do dia",
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(bottom: 50.0),
+            height: 250,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                buildSpecialtyCard(
+                  "Prato feito",
+                  "Arroz, feijão, ovo frito, bife, batata frita e salada.",
+                  "images/pratofeito.jpeg",
+                ),
+                buildSpecialtyCard(
+                  "Salada Caesar",
+                  "A deliciosa salada Caesar, perfeita para sua dieta!",
+                  "images/salada.jpg",
+                ),
+                buildSpecialtyCard(
+                  "Macarronada",
+                  "Deliciosa macarronada espaguete ao molho de tomate.",
+                  'images/macarronada.jpg',
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Text(
+              "Aqui no nosso restaurante, você enontra os melhores sabores e a melhor qualidade",
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSpecialtyCard(
+      String title, String description, String imagePath) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10.0),
+      width: 200,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+              child: Image.asset(
+                imagePath,
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -247,66 +398,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ][currentPageIndex]);
   }
 
-  get todayTab => Container(
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          insidePadding(
-              Text(
-                "Seja bem-vindo(a)!",
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              bottomPadding: 64),
-          insidePadding(Text("HOMEEEEEEEEEEEEEEE",
-              style: Theme.of(context).textTheme.titleLarge)),
-          Container(
-            margin: const EdgeInsets.only(bottom: 24.0),
-            height: 70,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                const SizedBox(
-                  width: 10,
-                ),
-                buildChoice(0),
-                const SizedBox(
-                  width: 10,
-                ),
-                buildChoice(1),
-                const SizedBox(
-                  width: 10,
-                ),
-                buildChoice(2),
-                const SizedBox(
-                  width: 10,
-                ),
-                buildChoice(3),
-                const SizedBox(
-                  width: 10,
-                ),
-              ],
-            ),
-          ),
-          insidePadding(Container(
-              margin: const EdgeInsets.only(bottom: 48.0),
-              width: double.maxFinite,
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: Colors.black26,
-                    style: BorderStyle.solid,
-                    width: 0.5),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: _getMainColumn())),
-          insidePadding(Text("Todas as reservas",
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    decoration: TextDecoration.underline,
-                  ))),
-        ],
-      ));
-
   //coluna principal
   Widget _getMainColumn() => Column(
         children: [
@@ -391,9 +482,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       );
-
+  get todayTab => HomeScreen();
   get calendarTab => MenuScreen();
-  get advertisingTab => const Center(child: Text("Anúncio"));
+  get advertisingTab => DrinkScreen();
   get messagesTab => const Center(child: Text("Mensagens"));
   get menuTab => const Center(child: Text("Menu"));
 
