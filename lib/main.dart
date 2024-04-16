@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'utils.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -134,6 +135,33 @@ class DrinkScreen extends StatelessWidget {
             image: 'images/agua.png',
           ),
         ],
+      ),
+    );
+  }
+}
+
+class MapScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Localização no Mapa'),
+      ),
+      body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: LatLng(-28.26545877936513, -52.39748703386983), // Posição inicial do mapa
+          zoom: 14.0, // Zoom inicial do mapa
+        ),
+        markers: {
+          Marker(
+            markerId: MarkerId('marker_1'),
+            position: LatLng(-28.26545877936513, -52.39748703386983), // Posição do marcador
+            infoWindow: InfoWindow(
+              title: 'Localização',
+              snippet: 'São Paulo, Brasil',
+            ),
+          ),
+        },
       ),
     );
   }
@@ -485,7 +513,7 @@ class _MyHomePageState extends State<MyHomePage> {
   get todayTab => HomeScreen();
   get calendarTab => MenuScreen();
   get advertisingTab => DrinkScreen();
-  get messagesTab => const Center(child: Text("Mensagens"));
+  get messagesTab => MapScreen();
   get menuTab => const Center(child: Text("Menu"));
 
   Widget buildChoice(int index) => ActionChip(
