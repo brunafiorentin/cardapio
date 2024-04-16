@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'utils.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -139,26 +140,59 @@ class DrinkScreen extends StatelessWidget {
   }
 }
 
+class MapScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Localização no Mapa'),
+      ),
+      body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: LatLng(-28.26545877936513, -52.39748703386983), // Posição inicial do mapa
+          zoom: 14.0, // Zoom inicial do mapa
+        ),
+        markers: {
+          Marker(
+            markerId: MarkerId('marker_1'),
+            position: LatLng(-28.26545877936513, -52.39748703386983), // Posição do marcador
+            infoWindow: InfoWindow(
+              title: 'Localização',
+              snippet: 'São Paulo, Brasil',
+            ),
+          ),
+        },
+      ),
+    );
+  }
+}
+
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // meio da página
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 40),
             child: Text(
               "Bem-vindo(a) ao Restaurante Apelação!",
-              style: Theme.of(context).textTheme.headline6,
+              style: TextStyle(
+                fontSize: 30,
+              ),
+
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
               "Especialidades do dia",
-              style: Theme.of(context).textTheme.headline5,
+              style: TextStyle(
+                fontSize: 20,
+              ),
             ),
           ),
           Container(
@@ -331,21 +365,28 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          //header
+          backgroundColor: Colors.grey,
           toolbarHeight: 80,
           systemOverlayStyle: const SystemUiOverlayStyle(
               statusBarColor: Colors.white,
               statusBarIconBrightness: Brightness.dark),
           elevation: 0,
-          actions: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.notifications_none_outlined))
-              ],
-            )
-          ],
+          title: Row(
+            children: [
+              Icon(Icons.restaurant, color: Colors.white),
+              SizedBox(width: 10),
+              Text(
+                'Restaurante Apelação',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ]
+
+          )
         ),
         bottomNavigationBar: NavigationBar(
           //propriedade que define a função que será chamada
@@ -485,7 +526,7 @@ class _MyHomePageState extends State<MyHomePage> {
   get todayTab => HomeScreen();
   get calendarTab => MenuScreen();
   get advertisingTab => DrinkScreen();
-  get messagesTab => const Center(child: Text("Mensagens"));
+  get messagesTab => MapScreen();
   get menuTab => const Center(child: Text("Menu"));
 
   Widget buildChoice(int index) => ActionChip(
