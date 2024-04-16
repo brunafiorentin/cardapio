@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title:'Cardápio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         navigationBarTheme: NavigationBarThemeData(
@@ -158,7 +159,7 @@ class MapScreen extends StatelessWidget {
             position: LatLng(-28.26545877936513, -52.39748703386983), // Posição do marcador
             infoWindow: InfoWindow(
               title: 'Localização',
-              snippet: 'São Paulo, Brasil',
+              snippet: 'Passo Fundo, Brasil',
             ),
           ),
         },
