@@ -117,19 +117,19 @@ class DrinkScreen extends StatelessWidget {
           ),
           MenuItem(
             title: 'Vinho',
-            description: 'Massa fresca feita na hora',
+            description: 'Vinho tinto de ótima qualidade e de uma excelente safra.',
             price: 'R\$ 20,00',
             image: 'images/Vinhotinto.jpg',
           ),
           MenuItem(
             title: 'Coca Cola',
-            description: 'Massa fresca feita na hora',
+            description: '',
             price: 'R\$ 8,00',
             image: 'images/cocacola.jpeg',
           ),
           MenuItem(
             title: 'Água',
-            description: 'Massa fresca feita na hora',
+            description: '',
             price: 'R\$ 5,00',
             image: 'images/agua.png',
           ),
@@ -422,7 +422,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.only(bottom: 48.0),
               child: Text("Checkout amanhã",
                   style: TextStyle(
-                      color: Colors.redAccent, fontWeight: FontWeight.bold)),
+                      color: Colors.blueAccent, fontWeight: FontWeight.bold)),
             ),
             Row(
               children: [
