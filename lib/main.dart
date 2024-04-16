@@ -434,54 +434,54 @@ class _MyHomePageState extends State<MyHomePage> {
         ][currentPageIndex]);
   }
 
-  //coluna principal
-  Widget _getMainColumn() => Column(
-        children: [
-          _getInternalColumn(),
-          const Divider(
-            color: Colors.black26,
-            height: 1,
-          ),
-          _getInternalRow()
-        ],
-      );
+  // //coluna principal
+  // Widget _getMainColumn() => Column(
+  //       children: [
+  //         _getInternalColumn(),
+  //         const Divider(
+  //           color: Colors.black26,
+  //           height: 1,
+  //         ),
+  //         _getInternalRow()
+  //       ],
+  //     );
 
   //coluna interna, filha da coluna principa/
-  Widget _getInternalColumn() => Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          //crossAxis é o eixo cruzado, logo, estamos em uma coluna e o eixo cruzado é na horizontal]
-          //em quase todo mundo, o início de um eixo horizontal é na esquerda
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 48.0),
-              child: Text("Checkout amanhã",
-                  style: TextStyle(
-                      color: Colors.blueAccent, fontWeight: FontWeight.bold)),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Michael",
-                          style: Theme.of(context).textTheme.titleLarge),
-                      Text("25 - 26 de jan.",
-                          style: Theme.of(context).textTheme.titleLarge),
-                    ],
-                  ),
-                ),
-                const CircleAvatar(
-                  backgroundImage: AssetImage("images/download.jpeg"),
-                  radius: 24,
-                )
-              ],
-            )
-          ],
-        ),
-      );
+  // Widget _getInternalColumn() => Padding(
+  //       padding: EdgeInsets.all(16.0),
+  //       child: Column(
+  //         //crossAxis é o eixo cruzado, logo, estamos em uma coluna e o eixo cruzado é na horizontal]
+  //         //em quase todo mundo, o início de um eixo horizontal é na esquerda
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           const Padding(
+  //             padding: EdgeInsets.only(bottom: 48.0),
+  //             child: Text("Checkout amanhã",
+  //                 style: TextStyle(
+  //                     color: Colors.blueAccent, fontWeight: FontWeight.bold)),
+  //           ),
+  //           Row(
+  //             children: [
+  //               Expanded(
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Text("Michael",
+  //                         style: Theme.of(context).textTheme.titleLarge),
+  //                     Text("25 - 26 de jan.",
+  //                         style: Theme.of(context).textTheme.titleLarge),
+  //                   ],
+  //                 ),
+  //               ),
+  //               const CircleAvatar(
+  //                 backgroundImage: AssetImage("images/download.jpeg"),
+  //                 radius: 24,
+  //               )
+  //             ],
+  //           )
+  //         ],
+  //       ),
+  //     );
 
   //row interna, filha da coluna principaç
   Widget _getInternalRow() => IntrinsicHeight(
