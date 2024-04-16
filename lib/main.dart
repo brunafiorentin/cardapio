@@ -419,10 +419,6 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.map),
               label: 'Localização',
             ),
-            NavigationDestination(
-              icon: Icon(Icons.menu),
-              label: 'Menu',
-            ),
           ],
         ),
         //mudamos o body para uma matriz, onde:
@@ -435,7 +431,6 @@ class _MyHomePageState extends State<MyHomePage> {
           calendarTab,
           advertisingTab,
           messagesTab,
-          menuTab
         ][currentPageIndex]);
   }
 
@@ -527,7 +522,6 @@ class _MyHomePageState extends State<MyHomePage> {
   get calendarTab => MenuScreen();
   get advertisingTab => DrinkScreen();
   get messagesTab => MapScreen();
-  get menuTab => const Center(child: Text("Menu"));
 
   Widget buildChoice(int index) => ActionChip(
         label: Text(
