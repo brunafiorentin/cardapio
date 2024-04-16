@@ -1,4 +1,6 @@
-# Projto cardápio
+# Projeto cardápio
+
+Alunos: Arthur Machado, Bruna Fiorentin, Eduarda Pagnussat e João Dall'agnol.
 
 A new Flutter project.
 
