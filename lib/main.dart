@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'api.dart';
+import 'models.dart';
+import 'utils.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,27 +14,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title:'Cardápio',
+      title: 'Cardápio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         navigationBarTheme: NavigationBarThemeData(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-            elevation: 5,
-            indicatorColor: Colors.white,
-            labelTextStyle: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.selected)) {
-                return const TextStyle(
-                    color: Colors.redAccent, fontWeight: FontWeight.bold);
-              }
-              return const TextStyle(color: Colors.black);
-            }),
-            iconTheme: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.selected)) {
-                return const IconThemeData(color: Colors.redAccent, opacity: 1);
-              }
-              return const IconThemeData(color: Colors.black, opacity: 0.4);
-            })),
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          elevation: 5,
+          indicatorColor: Colors.white,
+          labelTextStyle: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
+              return const TextStyle(
+                  color: Colors.redAccent, fontWeight: FontWeight.bold);
+            }
+            return const TextStyle(color: Colors.black);
+          }),
+          iconTheme: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
+              return const IconThemeData(color: Colors.redAccent, opacity: 1);
+            }
+            return const IconThemeData(color: Colors.black, opacity: 0.4);
+          }),
+        ),
         chipTheme: ChipThemeData(
           disabledColor: Colors.white,
           selectedColor: Colors.white,
@@ -61,35 +64,49 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MenuScreen extends StatelessWidget {
+class MenuScreen extends StatefulWidget {
+  @override
+  _MenuScreenState createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> {
+  late Future<List<Comida>> futureComidas;
+
+  @override
+  void initState() {
+    super.initState();
+    futureComidas = fetchData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cardápio de pratos quentes'),
       ),
-      body: ListView(
-        padding: EdgeInsets.all(16.0),
-        children: <Widget>[
-          MenuItem(
-            title: 'Pizza',
-            description: 'Deliciosa pizza com diversos sabores',
-            price: 'R\$ 25,00',
-            image: 'images/pizza.jpg',
-          ),
-          MenuItem(
-            title: 'Hambúrguer',
-            description: 'Suculento hambúrguer artesanal',
-            price: 'R\$ 15,00',
-            image: 'images/hamburger.jpg',
-          ),
-          MenuItem(
-            title: 'Massa',
-            description: 'Massa fresca feita na hora',
-            price: 'R\$ 20,00',
-            image: 'images/macarronada.jpg',
-          ),
-        ],
+      body: FutureBuilder<List<Comida>>(
+        future: futureComidas,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Erro ao carregar dados'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Nenhum item encontrado'));
+          }
+
+          return ListView(
+            padding: EdgeInsets.all(16.0),
+            children: snapshot.data!.map((comida) {
+              return MenuItem(
+                title: comida.title,
+                description: comida.description,
+                price: comida.price,
+                image: comida.image,
+              );
+            }).toList(),
+          );
+        },
       ),
     );
   }
@@ -184,7 +201,6 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 30,
               ),
-
             ),
           ),
           Padding(
@@ -287,9 +303,9 @@ class MenuItem extends StatelessWidget {
 
   MenuItem(
       {required this.title,
-      required this.description,
-      required this.price,
-      required this.image});
+        required this.description,
+        required this.price,
+        required this.image});
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -367,27 +383,27 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(
           //header
-          backgroundColor: Colors.grey,
-          toolbarHeight: 80,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: Colors.white,
-              statusBarIconBrightness: Brightness.dark),
-          elevation: 0,
-          title: Row(
-            children: [
-              Icon(Icons.restaurant, color: Colors.white),
-              SizedBox(width: 10),
-              Text(
-                'Restaurante Apelação',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ]
+            backgroundColor: Colors.grey,
+            toolbarHeight: 80,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.white,
+                statusBarIconBrightness: Brightness.dark),
+            elevation: 0,
+            title: Row(
+                children: [
+                  Icon(Icons.restaurant, color: Colors.white),
+                  SizedBox(width: 10),
+                  Text(
+                    'Restaurante Apelação',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ]
 
-          )
+            )
         ),
         bottomNavigationBar: NavigationBar(
           //propriedade que define a função que será chamada
@@ -486,58 +502,58 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //row interna, filha da coluna principaç
   Widget _getInternalRow() => IntrinsicHeight(
-        child: Row(
-          children: [
-            Expanded(
-              child: TextButton(
-                style: const ButtonStyle(
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                onPressed: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Enviar mensagem",
-                      style: Theme.of(context).textTheme.labelLarge),
-                ),
-              ),
+    child: Row(
+      children: [
+        Expanded(
+          child: TextButton(
+            style: const ButtonStyle(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+            onPressed: () {},
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Enviar mensagem",
+                  style: Theme.of(context).textTheme.labelLarge),
             ),
-            const VerticalDivider(
-              color: Colors.black26,
-              width: 1,
-            ),
-            Expanded(
-              child: TextButton(
-                style: const ButtonStyle(
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                onPressed: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Ligar",
-                      style: Theme.of(context).textTheme.labelLarge),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      );
+        const VerticalDivider(
+          color: Colors.black26,
+          width: 1,
+        ),
+        Expanded(
+          child: TextButton(
+            style: const ButtonStyle(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+            onPressed: () {},
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Ligar",
+                  style: Theme.of(context).textTheme.labelLarge),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
   get todayTab => HomeScreen();
   get calendarTab => MenuScreen();
   get advertisingTab => DrinkScreen();
   get messagesTab => MapScreen();
 
   Widget buildChoice(int index) => ActionChip(
-        label: Text(
-          widget.textsOfChips[index],
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(
-            width: statesOfChips[index] ? 2.0 : 0.5,
-          ),
-        ),
-        onPressed: () {
-          setState(() {
-            statesOfChips[index] = !statesOfChips[index];
-          });
-        },
-      );
+    label: Text(
+      widget.textsOfChips[index],
+    ),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+      side: BorderSide(
+        width: statesOfChips[index] ? 2.0 : 0.5,
+      ),
+    ),
+    onPressed: () {
+      setState(() {
+        statesOfChips[index] = !statesOfChips[index];
+      });
+    },
+  );
 }
