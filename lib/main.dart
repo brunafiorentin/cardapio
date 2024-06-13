@@ -6,16 +6,28 @@ import 'models.dart';
 import 'utils.dart';
 import 'banco_sembast.dart';
 import 'api.dart';
+import 'cart_model.dart';
+import 'drink_provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseHelper().open();
-  runApp(const MyApp());
-
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => DrinkProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -139,6 +151,11 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 }
 
+
+
+
+
+
 class DrinkScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -146,40 +163,22 @@ class DrinkScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Cardápio de bebidas'),
       ),
-      body: ListView(
-        padding: EdgeInsets.all(16.0),
-        children: <Widget>[
-          MenuItem(
-            title: 'Caipirinha',
-            description: 'A melhor caipirinha já provada em todo esse Brasil',
-            price: 'R\$ 15,00',
-            image: 'images/caipirinha.jpg',
-          ),
-          MenuItem(
-            title: 'Cerveja',
-            description: 'As melhores cervejas você encontra aqui',
-            price: 'R\$ 7,00',
-            image: 'images/cerveja.jpg',
-          ),
-          MenuItem(
-            title: 'Vinho',
-            description: 'Vinho tinto de ótima qualidade e de uma excelente safra.',
-            price: 'R\$ 20,00',
-            image: 'images/Vinhotinto.jpg',
-          ),
-          MenuItem(
-            title: 'Coca Cola',
-            description: '',
-            price: 'R\$ 8,00',
-            image: 'images/cocacola.jpeg',
-          ),
-          MenuItem(
-            title: 'Água',
-            description: '',
-            price: 'R\$ 5,00',
-            image: 'images/agua.png',
-          ),
-        ],
+      body: Consumer<DrinkProvider>(
+        builder: (context, drinkProvider, child) {
+          return ListView.builder(
+            padding: EdgeInsets.all(16.0),
+            itemCount: drinkProvider.drinks.length,
+            itemBuilder: (context, index) {
+              final drink = drinkProvider.drinks[index];
+              return MenuItem(
+                title: drink.title,
+                description: drink.description,
+                price: drink.price,
+                image: drink.image,
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -478,55 +477,6 @@ class _MyHomePageState extends State<MyHomePage> {
           messagesTab,
         ][currentPageIndex]);
   }
-
-  // //coluna principal
-  // Widget _getMainColumn() => Column(
-  //       children: [
-  //         _getInternalColumn(),
-  //         const Divider(
-  //           color: Colors.black26,
-  //           height: 1,
-  //         ),
-  //         _getInternalRow()
-  //       ],
-  //     );
-
-  //coluna interna, filha da coluna principa/
-  // Widget _getInternalColumn() => Padding(
-  //       padding: EdgeInsets.all(16.0),
-  //       child: Column(
-  //         //crossAxis é o eixo cruzado, logo, estamos em uma coluna e o eixo cruzado é na horizontal]
-  //         //em quase todo mundo, o início de um eixo horizontal é na esquerda
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           const Padding(
-  //             padding: EdgeInsets.only(bottom: 48.0),
-  //             child: Text("Checkout amanhã",
-  //                 style: TextStyle(
-  //                     color: Colors.blueAccent, fontWeight: FontWeight.bold)),
-  //           ),
-  //           Row(
-  //             children: [
-  //               Expanded(
-  //                 child: Column(
-  //                   crossAxisAlignment: CrossAxisAlignment.start,
-  //                   children: [
-  //                     Text("Michael",
-  //                         style: Theme.of(context).textTheme.titleLarge),
-  //                     Text("25 - 26 de jan.",
-  //                         style: Theme.of(context).textTheme.titleLarge),
-  //                   ],
-  //                 ),
-  //               ),
-  //               const CircleAvatar(
-  //                 backgroundImage: AssetImage("images/download.jpeg"),
-  //                 radius: 24,
-  //               )
-  //             ],
-  //           )
-  //         ],
-  //       ),
-  //     );
 
   //row interna, filha da coluna principaç
   Widget _getInternalRow() => IntrinsicHeight(

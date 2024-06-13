@@ -33,6 +33,7 @@ dependencies:
   json_annotation: ^4.8.1
   flutter:
     sdk: flutter
+  provider: ^6.0.3
 
 
 

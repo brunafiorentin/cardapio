@@ -49,9 +49,9 @@ class DatabaseHelper {
 
     // Inserir dados iniciais
     await _store.addAll(_db, [
-      Food(id: 1, name: 'Apple', price: 1.50).toMap(),
-      Food(id: 2, name: 'Banana', price: 0.75).toMap(),
-      Food(id: 3, name: 'Orange', price: 1.20).toMap(),
+      Food(id: 1, name: 'Pizza', price: 50.00).toMap(),
+      Food(id: 2, name: 'Hamburguer', price: 30.00).toMap(),
+      Food(id: 3, name: 'Frango assado', price: 25.00).toMap(),
     ]);
   }
 
