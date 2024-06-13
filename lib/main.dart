@@ -5,6 +5,7 @@ import 'api.dart';
 import 'models.dart';
 import 'utils.dart';
 import 'banco_sembast.dart';
+import 'api.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,6 +77,8 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   late Future<List<Food>> futureFoods;
+   // Este valor pode ser obtido de uma variável específica ou banco de dados
+  final UnsplashService unsplashService = UnsplashService();
 
   @override
   void initState() {
@@ -99,16 +102,33 @@ class _MenuScreenState extends State<MenuScreen> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No foods available'));
           } else {
+            // Pegar apenas os primeiros 3 itens
+            final foods = snapshot.data!.take(3).toList();
+
             return ListView.builder(
               padding: EdgeInsets.all(16.0),
-              itemCount: snapshot.data!.length,
+              itemCount: foods.length,
               itemBuilder: (context, index) {
-                final food = snapshot.data![index];
-                return MenuItem(
-                  title: food.name,
-                  description: 'Descrição do alimento', // Você pode ajustar isso conforme necessário
-                  price: 'R\$ ${food.price.toStringAsFixed(2)}',
-                  image: 'images/${food.name.toLowerCase()}.jpg', // Supondo que as imagens sigam essa convenção
+                final food = foods[index];
+                String searchTerm = '${food.name}';
+                return FutureBuilder<List<String>>(
+                  future: unsplashService.fetchImages(searchTerm),
+                  builder: (context, imageSnapshot) {
+                    if (imageSnapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (imageSnapshot.hasError) {
+                      return Center(child: Text('Error loading image'));
+                    } else if (!imageSnapshot.hasData || imageSnapshot.data!.isEmpty) {
+                      return Center(child: Text('No images available'));
+                    } else {
+                      return MenuItem(
+                        title: food.name,
+                        description: 'Descrição do alimento', // Você pode ajustar isso conforme necessário
+                        price: 'R\$ ${food.price.toStringAsFixed(2)}',
+                        image: imageSnapshot.data!.first, // Pegando a primeira URL da lista de URLs
+                      );
+                    }
+                  },
                 );
               },
             );
@@ -313,13 +333,14 @@ class MenuItem extends StatelessWidget {
         required this.description,
         required this.price,
         required this.image});
+
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Image.asset(
+          Image.network(
             image,
             fit: BoxFit.cover,
             height: 200.0,

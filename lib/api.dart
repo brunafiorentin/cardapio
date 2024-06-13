@@ -1,25 +1,20 @@
-import 'package:dio/dio.dart';
-import 'package:retrofit/retrofit.dart';
-import 'models.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-part 'api.g.dart';
+class UnsplashService {
+  final String accessKey = 'gQfLtxFZriabyW1P9qn54q1QMkjniJKAZt61I1bGkVQ';
 
-@RestApi(baseUrl: "https://api.exemplo.com")
-abstract class ApiService {
-  factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
+  Future<List<String>> fetchImages(String query) async {
+    final response = await http.get(
+      Uri.parse('https://api.unsplash.com/search/photos?query=$query&client_id=$accessKey'),
+    );
 
-  @GET("/comidas")
-  Future<List<Comida>> getComidas();
-}
-
-Future<List<Comida>> fetchData() async {
-  final dio = Dio();
-  final client = ApiService(dio);
-
-  try {
-    return await client.getComidas();
-  } catch (e) {
-    print(e);
-    return [];
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      List<dynamic> results = data['results'];
+      return results.map<String>((result) => result['urls']['small'] as String).toList();
+    } else {
+      throw Exception('Failed to load images');
+    }
   }
 }
