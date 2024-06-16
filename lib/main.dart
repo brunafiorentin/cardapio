@@ -10,7 +10,9 @@ import 'cart_model.dart';
 import 'drink_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
-
+import 'package:hello_world/controller/generative_controller.dart';
+import 'package:hello_world/screens/home_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,7 +83,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class MenuScreen extends StatefulWidget {
   @override
   _MenuScreenState createState() => _MenuScreenState();
@@ -89,13 +90,14 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   late Future<List<Food>> futureFoods;
-   // Este valor pode ser obtido de uma variável específica ou banco de dados
+  // Este valor pode ser obtido de uma variável específica ou banco de dados
   final UnsplashService unsplashService = UnsplashService();
 
   @override
   void initState() {
     super.initState();
-    futureFoods = DatabaseHelper().foods(); // Buscar alimentos do banco de dados
+    futureFoods =
+        DatabaseHelper().foods(); // Buscar alimentos do banco de dados
   }
 
   @override
@@ -126,18 +128,22 @@ class _MenuScreenState extends State<MenuScreen> {
                 return FutureBuilder<List<String>>(
                   future: unsplashService.fetchImages(searchTerm),
                   builder: (context, imageSnapshot) {
-                    if (imageSnapshot.connectionState == ConnectionState.waiting) {
+                    if (imageSnapshot.connectionState ==
+                        ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     } else if (imageSnapshot.hasError) {
                       return Center(child: Text('Error loading image'));
-                    } else if (!imageSnapshot.hasData || imageSnapshot.data!.isEmpty) {
+                    } else if (!imageSnapshot.hasData ||
+                        imageSnapshot.data!.isEmpty) {
                       return Center(child: Text('No images available'));
                     } else {
                       return MenuItem(
                         title: food.name,
-                        description: 'Descrição do alimento', // Você pode ajustar isso conforme necessário
+                        description:
+                            'Descrição do alimento', // Você pode ajustar isso conforme necessário
                         price: 'R\$ ${food.price.toStringAsFixed(2)}',
-                        image: imageSnapshot.data!.first, // Pegando a primeira URL da lista de URLs
+                        image: imageSnapshot.data!
+                            .first, // Pegando a primeira URL da lista de URLs
                       );
                     }
                   },
@@ -150,11 +156,6 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 }
-
-
-
-
-
 
 class DrinkScreen extends StatelessWidget {
   @override
@@ -193,13 +194,15 @@ class MapScreen extends StatelessWidget {
       ),
       body: GoogleMap(
         initialCameraPosition: CameraPosition(
-          target: LatLng(-28.26545877936513, -52.39748703386983), // Posição inicial do mapa
+          target: LatLng(-28.26545877936513,
+              -52.39748703386983), // Posição inicial do mapa
           zoom: 14.0, // Zoom inicial do mapa
         ),
         markers: {
           Marker(
             markerId: MarkerId('marker_1'),
-            position: LatLng(-28.26545877936513, -52.39748703386983), // Posição do marcador
+            position: LatLng(
+                -28.26545877936513, -52.39748703386983), // Posição do marcador
             infoWindow: InfoWindow(
               title: 'Localização',
               snippet: 'Passo Fundo, Brasil',
@@ -211,11 +214,71 @@ class MapScreen extends StatelessWidget {
   }
 }
 
+// class HomeScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       // meio da página
+//       backgroundColor: Colors.white,
+//       body: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Padding(
+//             padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 40),
+//             child: Text(
+//               "Bem-vindo(a) ao Restaurante Apelação!",
+//               style: TextStyle(
+//                 fontSize: 30,
+//               ),
+//             ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 20.0),
+//             child: Text(
+//               "Especialidades do dia",
+//               style: TextStyle(
+//                 fontSize: 20,
+//               ),
+//             ),
+//           ),
+//           Container(
+//             margin: const EdgeInsets.only(bottom: 50.0),
+//             height: 250,
+//             child: ListView(
+//               scrollDirection: Axis.horizontal,
+//               children: [
+//                 buildSpecialtyCard(
+//                   "Prato feito",
+//                   "Arroz, feijão, ovo frito, bife, batata frita e salada.",
+//                   "images/pratofeito.jpeg",
+//                 ),
+//                 buildSpecialtyCard(
+//                   "Salada Caesar",
+//                   "A deliciosa salada Caesar, perfeita para sua dieta!",
+//                   "images/salada.jpg",
+//                 ),
+//                 buildSpecialtyCard(
+//                   "Macarronada",
+//                   "Deliciosa macarronada espaguete ao molho de tomate.",
+//                   'images/macarronada.jpg',
+//                 ),
+//               ],
+//             ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 20.0),
+//             child: Text(
+//               "Aqui no nosso restaurante, você encontra os melhores sabores e a melhor qualidade, além de se divertir com o desespero dos universitários! :)",
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // meio da página
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,49 +292,17 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-              "Especialidades do dia",
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 50.0),
-            height: 250,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                buildSpecialtyCard(
-                  "Prato feito",
-                  "Arroz, feijão, ovo frito, bife, batata frita e salada.",
-                  "images/pratofeito.jpeg",
-                ),
-                buildSpecialtyCard(
-                  "Salada Caesar",
-                  "A deliciosa salada Caesar, perfeita para sua dieta!",
-                  "images/salada.jpg",
-                ),
-                buildSpecialtyCard(
-                  "Macarronada",
-                  "Deliciosa macarronada espaguete ao molho de tomate.",
-                  'images/macarronada.jpg',
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-              "Aqui no nosso restaurante, você encontra os melhores sabores e a melhor qualidade, além de se divertir com o desespero dos universitários! :)",
+          Expanded(
+            child: BlocProvider(
+              create: (context) => GenerativeController(),
+              child: ScreenHome(),
             ),
           ),
         ],
       ),
     );
   }
+
 
   Widget buildSpecialtyCard(
       String title, String description, String imagePath) {
@@ -329,9 +360,9 @@ class MenuItem extends StatelessWidget {
 
   MenuItem(
       {required this.title,
-        required this.description,
-        required this.price,
-        required this.image});
+      required this.description,
+      required this.price,
+      required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -409,29 +440,25 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          //header
+            //header
             backgroundColor: Colors.grey,
             toolbarHeight: 80,
             systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: Colors.white,
                 statusBarIconBrightness: Brightness.dark),
             elevation: 0,
-            title: Row(
-                children: [
-                  Icon(Icons.restaurant, color: Colors.white),
-                  SizedBox(width: 10),
-                  Text(
-                    'Restaurante Apelação',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ]
-
-            )
-        ),
+            title: Row(children: [
+              Icon(Icons.restaurant, color: Colors.white),
+              SizedBox(width: 10),
+              Text(
+                'Restaurante Apelação',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ])),
         bottomNavigationBar: NavigationBar(
           //propriedade que define a função que será chamada
           //quando o usuário clicar em uma das tabs
@@ -447,9 +474,9 @@ class _MyHomePageState extends State<MyHomePage> {
           destinations: const <Widget>[
             NavigationDestination(
               icon: Icon(
-                Icons.home,
+                Icons.content_paste_search,
               ),
-              label: 'Home',
+              label: 'Gere sua receita',
             ),
             NavigationDestination(
               icon: Icon(Icons.fastfood),
@@ -480,58 +507,58 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //row interna, filha da coluna principaç
   Widget _getInternalRow() => IntrinsicHeight(
-    child: Row(
-      children: [
-        Expanded(
-          child: TextButton(
-            style: const ButtonStyle(
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-            onPressed: () {},
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Enviar mensagem",
-                  style: Theme.of(context).textTheme.labelLarge),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                style: const ButtonStyle(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                onPressed: () {},
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Enviar mensagem",
+                      style: Theme.of(context).textTheme.labelLarge),
+                ),
+              ),
             ),
-          ),
-        ),
-        const VerticalDivider(
-          color: Colors.black26,
-          width: 1,
-        ),
-        Expanded(
-          child: TextButton(
-            style: const ButtonStyle(
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-            onPressed: () {},
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Ligar",
-                  style: Theme.of(context).textTheme.labelLarge),
+            const VerticalDivider(
+              color: Colors.black26,
+              width: 1,
             ),
-          ),
+            Expanded(
+              child: TextButton(
+                style: const ButtonStyle(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                onPressed: () {},
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Ligar",
+                      style: Theme.of(context).textTheme.labelLarge),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
   get todayTab => HomeScreen();
   get calendarTab => MenuScreen();
   get advertisingTab => DrinkScreen();
   get messagesTab => MapScreen();
 
   Widget buildChoice(int index) => ActionChip(
-    label: Text(
-      widget.textsOfChips[index],
-    ),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20.0),
-      side: BorderSide(
-        width: statesOfChips[index] ? 2.0 : 0.5,
-      ),
-    ),
-    onPressed: () {
-      setState(() {
-        statesOfChips[index] = !statesOfChips[index];
-      });
-    },
-  );
+        label: Text(
+          widget.textsOfChips[index],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+          side: BorderSide(
+            width: statesOfChips[index] ? 2.0 : 0.5,
+          ),
+        ),
+        onPressed: () {
+          setState(() {
+            statesOfChips[index] = !statesOfChips[index];
+          });
+        },
+      );
 }

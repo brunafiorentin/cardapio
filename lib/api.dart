@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class UnsplashService {
-  final String accessKey = 'gQfLtxFZriabyW1P9qn54q1QMkjniJKAZt61I1bGkVQ';
+  final String accessKey = '1zUCmf9cMTzEzZwMzuzp4iC1mfavknbD66d2XPRX0CQ';
 
   Future<List<String>> fetchImages(String query) async {
     final response = await http.get(
