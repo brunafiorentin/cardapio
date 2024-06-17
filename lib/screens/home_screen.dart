@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,7 +7,7 @@ import '/controller/generative_controller.dart';
 class ScreenHome extends StatelessWidget {
   final TextEditingController _controller = TextEditingController(
     text:
-        "Identifique com precisão o produto passado na imagem e forneça uma receita apropriada e consistente com sua análise. ",
+    "Identifique com precisão o produto passado na imagem e forneça uma receita apropriada e consistente com sua análise. ",
   );
 
   late BuildContext context;
@@ -28,7 +27,7 @@ class ScreenHome extends StatelessWidget {
           } else if (state is LoadingState) {
             return _buildLoadingState();
           } else if (state is OnlyPhotoState) {
-            return _buildOnlyPhotoState();
+            return _buildOnlyPhotoState(state);
           } else if (state is SuccessState) {
             return _buildSuccessState(state.result);
           } else {
@@ -40,98 +39,98 @@ class ScreenHome extends StatelessWidget {
   }
 
   Widget _buildLoadingState() => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            Text("Carregando receita...")
-          ],
-        ),
-      );
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircularProgressIndicator(),
+        Text("Carregando receita...")
+      ],
+    ),
+  );
 
   Widget _buildSuccessState(String result) => SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 12,
-              ),
-              Text(result),
-              const SizedBox(
-                height: 12,
-              ),
-              OutlinedButton(
-                  onPressed: () {
-                    context.read<GenerativeController>().reset();
-                  },
-                  child: const Text("Nova receita"))
-            ],
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 12,
           ),
-        ),
-      );
+          Text(result),
+          const SizedBox(
+            height: 12,
+          ),
+          OutlinedButton(
+              onPressed: () {
+                context.read<GenerativeController>().reset();
+              },
+              child: const Text("Nova receita"))
+        ],
+      ),
+    ),
+  );
 
-  Widget _buildOnlyPhotoState() => SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
+  Widget _buildOnlyPhotoState(OnlyPhotoState state) => SingleChildScrollView(
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 12,
+          ),
+          Image.network(
+            state.image.path,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(
+            height: 24,
+          ),
+          TextFormField(
+            minLines: 4,
+            maxLines: 4,
+            controller: _controller,
+            decoration: const InputDecoration(
+              labelText: 'Comando',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          _sendButton(),
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildInitialState() => SingleChildScrollView(
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        children: [
+          Row(
             children: [
-              const SizedBox(
-                height: 12,
-              ),
-              Image.asset(
-                'assets/images/paodequeijo.jpg',
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextFormField(
-                minLines: 4,
-                maxLines: 4,
-                controller: _controller,
-                decoration: const InputDecoration(
-                  labelText: 'Comando',
-                  border: OutlineInputBorder(),
+              Expanded(
+                child: OutlinedButton(
+                  child: const Text("+ Foto da Câmera"),
+                  onPressed: () => _selectPhotos(true),
                 ),
               ),
               const SizedBox(
-                height: 12,
+                width: 12,
               ),
-              _sendButton(),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildInitialState() => SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      child: const Text("+ Foto da Câmera"),
-                      onPressed: () => _selectPhotos(true),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Expanded(
-                    child: OutlinedButton(
-                      child: const Text("+ Fotos da Galeria"),
-                      onPressed: () => _selectPhotos(false),
-                    ),
-                  ),
-                ],
+              Expanded(
+                child: OutlinedButton(
+                  child: const Text("+ Fotos da Galeria"),
+                  onPressed: () => _selectPhotos(false),
+                ),
               ),
             ],
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   Widget _sendButton() => OutlinedButton(
       onPressed: () {
@@ -144,20 +143,17 @@ class ScreenHome extends StatelessWidget {
   void _selectPhotos(bool newPhoto) async {
     final ImagePicker _picker = ImagePicker();
     XFile? photo;
-    late List<XFile> images;
 
     if (newPhoto) {
       photo = await _picker.pickImage(
         source: ImageSource.camera,
       );
     } else {
-      images = await _picker.pickMultiImage();
+      photo = await _picker.pickImage(source: ImageSource.gallery);
     }
 
     if (photo?.path != null) {
       context.read<GenerativeController>().setSelectedPhoto(photo!);
-    } else if (images.isNotEmpty) {
-      context.read<GenerativeController>().setSelectedPhoto(images.first);
     }
   }
 }

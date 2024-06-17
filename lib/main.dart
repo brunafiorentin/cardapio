@@ -476,7 +476,7 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(
                 Icons.content_paste_search,
               ),
-              label: 'Gere sua receita',
+              label: 'Receita',
             ),
             NavigationDestination(
               icon: Icon(Icons.fastfood),

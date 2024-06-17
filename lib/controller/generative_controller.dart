@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,7 +10,7 @@ class GenerativeController extends Cubit<Event> {
 
   void getCurrent({required String text, required String path}) async {
     emit(LoadingState());
-    const String API_KEY = "AIzaSyAakzNGzv79uTsu7pZWGVXYeZno6KOCkRg";
+    const String API_KEY = "AIzaSyD3HWdfkxJ0A05m9vqZEVmHBKe6-xCBpYE";
     final generativeConfig = GenerationConfig(
       temperature: 0.9,
       topP: 0.95,
@@ -26,7 +24,7 @@ class GenerativeController extends Cubit<Event> {
     final content = [
       Content.multi([
         TextPart(text),
-        DataPart('image/jpeg', File(path).readAsBytesSync())
+        DataPart('image/jpeg', await selectedPhoto!.readAsBytes())
       ])
     ];
 
@@ -36,7 +34,7 @@ class GenerativeController extends Cubit<Event> {
 
   void setSelectedPhoto(XFile newPhoto) {
     selectedPhoto = newPhoto;
-    emit(OnlyPhotoState());
+    emit(OnlyPhotoState(newPhoto));
   }
 
   void reset() {
